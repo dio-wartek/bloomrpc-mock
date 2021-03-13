@@ -1,5 +1,5 @@
+import {KeyCertPair, Server, ServerCredentials} from '@grpc/grpc-js';
 import {bgCyan, green, yellow} from 'colors/safe';
-import {KeyCertPair, Server, ServerCredentials} from 'grpc';
 import {Service} from 'protobufjs';
 
 import {mockServiceMethods} from './automock';
