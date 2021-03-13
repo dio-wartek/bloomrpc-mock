@@ -15,7 +15,9 @@ import {
   Type,
 } from 'protobufjs';
 
-import {load as grpcDef} from '@grpc/proto-loader';
+const pbjs = require('protobufjs');
+
+import {load as grpcDef, loadFileDescriptorSetFromBuffer} from '@grpc/proto-loader';
 
 export interface Proto {
   fileName: string;
@@ -74,6 +76,31 @@ export async function fromFileName(protoPath: string, includeDirs?: string[]): P
     ast: protoAST,
     root,
   };
+}
+
+export async function fromDescriptorSetFile(protoDescriptorSetFilePath: string): Promise<Proto> {
+  const descriptorSetBuffer = await promisifyRead(protoDescriptorSetFilePath);
+
+  const descriptor = require('protobufjs/ext/descriptor');
+  const decodedDescriptorSet = descriptor.FileDescriptorSet.decode(descriptorSetBuffer);
+  const packageDefinition = loadFileDescriptorSetFromBuffer(Buffer.from(descriptorSetBuffer), {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+  });
+
+  const root = pbjs.Root.fromDescriptor(decodedDescriptorSet);
+  const protoAST = loadPackageDefinition(packageDefinition);
+
+  return {
+    fileName: protoDescriptorSetFilePath.split(path.sep).pop() || '',
+    filePath: protoDescriptorSetFilePath,
+    protoText: "",
+    ast: protoAST,
+    root,
+  }
 }
 
 /**
