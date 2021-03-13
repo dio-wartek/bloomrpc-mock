@@ -1,5 +1,5 @@
+import {GrpcObject, loadPackageDefinition} from '@grpc/grpc-js';
 import * as fs from 'fs';
-import {GrpcObject, loadPackageDefinition} from 'grpc';
 import get = require('lodash/get');
 import * as path from 'path';
 import {
@@ -138,7 +138,7 @@ export function walkNamespace(root: Root, onNamespace: (namespace: Namespace) =>
       if (parentNamespace) {
         typeName = matchingAncestorNamespaceLookup(typeName, parentNamespace, typeName);
       }
-      const nestedNamespace = root.lookup(typeName);
+      const nestedNamespace = root.lookup(parentNamespace ? (parentNamespace.fullName + '.' + typeName) : typeName);
       if (nestedNamespace && isNamespace(nestedNamespace)) {
         onNamespace(nestedNamespace as Namespace);
         walkNamespace(root, onNamespace, nestedNamespace as Namespace);
@@ -179,7 +179,7 @@ function addIncludePathToRoot(root: Root, includePaths: string[]) {
       try {
         fs.accessSync(fullPath, fs.constants.R_OK);
         return fullPath;
-      } catch (err) {
+      } catch {
         continue;
       }
     }

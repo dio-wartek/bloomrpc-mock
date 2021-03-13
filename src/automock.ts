@@ -1,4 +1,4 @@
-import {UntypedServiceImplementation} from 'grpc';
+import {UntypedServiceImplementation} from '@grpc/grpc-js';
 import {Enum, Field, MapField, Message, OneOf, Service, Type} from 'protobufjs';
 import * as uuid from 'uuid';
 
@@ -192,7 +192,7 @@ function mockField(field: Field, stackDepth?: StackDepth): any {
         }
       } else if (resolvedType instanceof Enum) {
         mockPropertyValue = mockEnum(resolvedType);
-      } else if (resolvedType === null) {
+      } else {
         mockPropertyValue = {};
       }
     }
@@ -261,7 +261,7 @@ function mockScalar(type: string, fieldName: string): any {
   case 'float':
     return 1.1;
   case 'bytes':
-    return new Buffer('Hello');
+    return Buffer.from('Hello');
   default:
     return null;
   }
