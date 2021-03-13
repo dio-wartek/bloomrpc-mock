@@ -1,7 +1,7 @@
 {
   "name": "wartek-bloomrpc-mock",
   "description": "Automock your grpc services",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": "Fabrizio Fenoglio (UtilityWarehouse)",
   "bin": {
     "wartek-brpc-mock": "./bin/run",
